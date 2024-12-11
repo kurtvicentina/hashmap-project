@@ -116,12 +116,12 @@ function linkedList() {
 
   const toString = () => {
       let currentNode = headNode;
-      let listToString = `( ${currentNode.value} ) -> `;
+      let listToString = `( ${JSON.stringify(currentNode.value)} ) -> `;
 
       while(currentNode.nextNode){
           currentNode = currentNode.nextNode;
 
-          listToString += `( ${currentNode.value} ) -> `
+          listToString += `( ${JSON.stringify(currentNode.value)} ) -> `
       }
 
       listToString += `( null )`
@@ -196,12 +196,12 @@ function linkedList() {
   length--;
   }
 
-  return { append, prepend, head, size, tail, at, pop, contains, find, toString, insertAt, removeAt}
+  return { headNode, append, prepend, head, size, tail, at, pop, contains, find, toString, insertAt, removeAt}
 }
 
 function node(value = null, nextNode = null){
 
-  return { value, nextNode}
+  return { value, nextNode }
 }
 
 function hashMap() {
@@ -223,28 +223,130 @@ function hash(key) {
 };
 
 function set(key, value){
-  let bucketNumber = hash(key);
-  const insertedValue = { [key]: value };
-  const linked = linkedList()
+    let bucketNumber = hash(key);
+    const insertedValue = { [key]: value };
+  
+      if(buckets[bucketNumber] !== undefined){
+        let currentNode = buckets[bucketNumber].head();
+        while(currentNode){
+            if(Object.keys(currentNode.value)[0] === key){
+                currentNode.value = insertedValue;
+                return;
+            }
+            currentNode = currentNode.nextNode;
+        }
 
-    buckets[bucketNumber] = insertedValue;
+          buckets[bucketNumber].append(insertedValue);
+          return;
+      }
+  
+      const link = linkedList();
+      link.append(insertedValue);
+      buckets[bucketNumber] = link;
+      return;
+  };
 
-    linked.append(insertedValue)
-    console.log(linked.head()) 
+function get(key){
+    let bucketNumber = hash(key);
+
+    if(!buckets[bucketNumber]) return null;
+
+    let currentNode = buckets[bucketNumber].head();
+
+    while(currentNode){
+        if(Object.keys(currentNode.value)[0] === key){
+            return Object.values(currentNode.value)[0];
+        }
+        currentNode = currentNode.nextNode;
+    }
+  };
+
+function has(key){
+    let bucketNumber = hash(key);
+
+    if(!buckets[bucketNumber]) return false;
+
+    let currentNode = buckets[bucketNumber].head();
+
+    while(currentNode){
+        if(Object.keys(currentNode.value)[0] === key){
+            console.log(bucketNumber)
+            return true;
+        }
+        currentNode = currentNode.nextNode;
+    }
+    console.log(bucketNumber)
+    return false;
 }
 
-  return {buckets, set}
+function remove(key){
+    let bucketNumber = hash(key);
+    let nodeCounter = 1;
+
+    if(!buckets[bucketNumber]){
+        buckets[bucketNumber] = []
+        return false;
+    }
+
+    let currentNode = buckets[bucketNumber].head();
+    let rightNode = currentNode.nextNode;
+    while(currentNode){
+        if(Object.keys(currentNode.value)[0] === key){
+            if(Object.keys(currentNode.value)[0] === Object.keys(currentNode.value)[0]){
+                buckets[bucketNumber].removeAt(nodeCounter);
+                console.log(buckets[bucketNumber].toString())
+                // const result = buckets[bucketNumber].(nodeCounter)
+                buckets[bucketNumber] = undefined;
+                return;
+            }
+
+
+            currentNode = rightNode.nextNode;
+            nodeCounter++;
+            return true;
+        }
+        currentNode = currentNode.nextNode;
+        rightNode = currentNode.nextNode;
+    }
+    return false;
+}
+
+  return {buckets, set, get, has, remove}
 }
 
 let test = hashMap();
 
-test.set('Kurt', 'Ezra');
+test.set('a', 'Ezra');
+test.set('a', 'a');
+test.set('a', 'b');
+test.set('a', 'c');
+test.set('aaa', 'adsd');
+test.set('aaa', 'bdasdasdasdasdasd');
+test.set('b', 'bdasdasdasdasdasd');
 
 
-console.log(test.buckets)
-console.log(test.buckets[12])
+test.set('faa', 'b');
+test.set('da', 'da');
+// console.log(test.has('ab'))
+// console.log(test.has('a'))
+// console.log(test.has('aaa'))
+// // console.log(test.has('faa'))
+
+
+
+
+test.set('b', 'bdasdasdasdasdasd');
+console.log(test.has('a'))
+
+
+
+// console.log(test.buckets)
+// console.log(test.buckets[12])
  
-test.set('Kurt', 'Aaaa');
+// test.set('Kurt', 'Aaaa');
 
-console.log(test.buckets)
-console.log(test.buckets[12])
+// console.log(test.buckets)
+// console.log(test.buckets[12])
+
+
+// FIX: LENGTH FUNCTION AND ALSO MORE TEST FOR REMOVE FUNCTION
