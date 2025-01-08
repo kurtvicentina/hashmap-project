@@ -10,9 +10,11 @@ function hashMap() {
 function growBuckets(load, cap){
     let entryLimit = Math.floor(cap * load);
     if(numOfEntries > entryLimit){
-        buckets.length *= 2;
-        loadFactor * 2;
-        capacity = buckets.length;
+        const newLength = buckets.length *= 2;
+        loadFactor *= 2;
+        capacity = newLength;
+
+        const newBucket = new Array(newLength)
 
         for (let node of buckets){
             if(node !== undefined){
@@ -20,16 +22,17 @@ function growBuckets(load, cap){
 
             while(currentNode){
                 let key = Object.values(currentNode.value)[0];
-                let value = Object.values(currentNode.value)
-                set(key, value);
+                let value = Object.keys(currentNode.value)[0];
+                set(key, value, newBucket);
 
                 currentNode = currentNode.nextNode;
             }
 
         }
     }
-        console.log('asdasdas')
-        console.log('this is bukects length'+buckets.length)
+        buckets = newBucket
+        console.log(newBucket.entries())
+        console.log('this is buckets length '+ newBucket.length);
     }
 }
 
@@ -45,12 +48,12 @@ function hash(key) {
     return hashCode % buckets.length; 
 };
 
-function set(key, value){
+function set(key, value, array = buckets){
     let bucketNumber = hash(key);
     const insertedValue = { [key]: value };
   
-      if(buckets[bucketNumber] !== undefined){
-        let currentNode = buckets[bucketNumber].head();
+      if(array[bucketNumber] !== undefined){
+        let currentNode = array[bucketNumber].head();
         while(currentNode){
             if(Object.keys(currentNode.value)[0] === key){
                 currentNode.value = insertedValue;
@@ -63,7 +66,7 @@ function set(key, value){
             currentNode = currentNode.nextNode;
         }
 
-          buckets[bucketNumber].append(insertedValue);
+          array[bucketNumber].append(insertedValue);
   
           console.log(bucketNumber)
           console.log(insertedValue)
@@ -74,7 +77,7 @@ function set(key, value){
   
       const link = linkedList();
       link.append(insertedValue);
-      buckets[bucketNumber] = link;
+      array[bucketNumber] = link;
       numOfEntries++;
       console.log(bucketNumber)
       console.log(insertedValue)
@@ -138,7 +141,7 @@ function remove(key){
 }
 
     function length(){
-        return entries;
+        return buckets.length;
     }
 
     function clear(){
@@ -210,8 +213,6 @@ test.set('ice cream', 'white')
 test.set('jacket', 'blue')
 test.set('kite', 'pink')
 test.set('lion', 'golden')
-test.set('lion', 'a')
-test.set('lion', 'b')
-console.log(test.entries())
+
 
 
