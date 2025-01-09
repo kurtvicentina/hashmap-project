@@ -21,8 +21,8 @@ function growBuckets(load, cap){
             let currentNode = node.head();
 
             while(currentNode){
-                let key = Object.values(currentNode.value)[0];
-                let value = Object.keys(currentNode.value)[0];
+                let key = Object.keys(currentNode.value)[0];
+                let value = Object.values(currentNode.value)[0];
                 set(key, value, newBucket);
 
                 currentNode = currentNode.nextNode;
@@ -184,7 +184,7 @@ function remove(key){
             if(key !== undefined){
                 let currentNode = key.head();
                 while(currentNode){
-                    allEntries.push(`${Object.keys(currentNode.value)[0]}, ${Object.values(currentNode.value)}`);
+                    allEntries.push(`${Object.keys(currentNode.value)[0]}, ${Object.values(currentNode.value)[0]}`);
                     currentNode = currentNode.nextNode;
                 }
             }
@@ -202,6 +202,7 @@ function remove(key){
 let test = hashMap();
 
 test.set('apple', 'red')
+test.set('apple', 'blue')
 test.set('banana', 'yellow')
 test.set('carrot', 'orange')
 test.set('dog', 'brown')
@@ -213,6 +214,12 @@ test.set('ice cream', 'white')
 test.set('jacket', 'blue')
 test.set('kite', 'pink')
 test.set('lion', 'golden')
+test.set('moon', 'silver')
+
+ test.set('moon', 'brown')
+ test.set('moon', 'light')
+ console.log(test.entries())
+
 
 
 
